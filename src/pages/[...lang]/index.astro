@@ -1,0 +1,228 @@
+---
+import PostList from '@/components/PostList.astro'
+import { allLocales, themeConfig } from '@/config'
+import { getProjectStatusLabel, getProjects } from '@/data/projects'
+import { getLangFromLocale, getLangRouteParam } from '@/i18n/lang'
+import { getLocalizedPath, getNotePath } from '@/i18n/path'
+import Layout from '@/layouts/Layout.astro'
+import { getFeaturedPosts, getNotes, getPosts } from '@/utils/content'
+
+export async function getStaticPaths() {
+  return allLocales.map(lang => ({
+    params: { lang: getLangRouteParam(lang) },
+  }))
+}
+
+const currentLang = getLangFromLocale(Astro.currentLocale)
+const featuredPosts = await getFeaturedPosts(currentLang)
+const allPosts = await getPosts(currentLang)
+const latestPosts = allPosts
+  .filter(p => !featuredPosts.some(f => f.id === p.id))
+  .slice(0, 5)
+const notes = (await getNotes(currentLang)).slice(0, 3)
+const projects = getProjects()
+
+const socials = [
+  { name: 'X', href: 'https://x.com/WalterAIBuilder' },
+  { name: 'GitHub', href: 'https://github.com/WalterAIBuilder' },
+  { name: 'RSS', href: getLocalizedPath('/atom.xml', currentLang).replace(/\/$/, '') },
+]
+---
+
+<Layout>
+  <!-- Hero: personal brand first -->
+  <section class="mb-14 lg:mb-16">
+    <h1 class="mb-4 text-8 font-semibold tracking-tight c-primary lg:text-10">
+      Walter Sun
+    </h1>
+    <p class="mb-1 text-4.5 leading-1.5em c-primary/90 font-medium lg:text-5">
+      Building apps.
+    </p>
+    <p class="mb-1 text-4.5 leading-1.5em c-primary/90 font-medium lg:text-5">
+      Analyzing systems.
+    </p>
+    <p class="mb-5 text-4.5 leading-1.5em c-primary/90 font-medium lg:text-5">
+      Sharing experiments.
+    </p>
+    <p class="mb-5 text-3.5 c-secondary/80 tracking-normal">
+      Growth Engineer · AI Builder · Indie Hacker
+    </p>
+    <p class="mb-6 max-w-prose text-3.75 leading-1.7em c-secondary">
+      I build apps, study growth systems, and write about what I learn from real-world experiments in AI, mobile ads, products, and engineering.
+    </p>
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-3.5">
+      {socials.map((s, i) => (
+        <>
+          <a
+            href={s.href}
+            class="c-secondary/80 transition-colors duration-150 hover:c-primary"
+            target={s.name === 'RSS' ? '_blank' : '_blank'}
+            rel="noopener noreferrer"
+          >
+            {s.name}
+          </a>
+          {i < socials.length - 1 && <span class="c-secondary/25">·</span>}
+        </>
+      ))}
+      <span class="c-secondary/25">·</span>
+      <span class="c-secondary/50 text-3.25">{themeConfig.site.url.replace('https://', '')}</span>
+    </div>
+  </section>
+
+  <!-- Featured Writing -->
+  {featuredPosts.length > 0 && (
+    <section class="mb-12">
+      <div class="mb-5 flex items-baseline justify-between gap-4">
+        <h2 class="text-3.5 font-semibold tracking-tight c-primary">
+          Featured Writing
+        </h2>
+        <a
+          href={getLocalizedPath('/writing/', currentLang)}
+          class="text-3 c-secondary/70 transition-colors duration-150 hover:c-primary"
+        >
+          All writing →
+        </a>
+      </div>
+      <ul class="flex flex-col gap-4">
+        {featuredPosts.map((post) => {
+          const slug = post.data.abbrlink || post.id
+          return (
+            <li class="uno-card p-4 lg:p-5">
+              <h3 class="mb-1.5 text-4 font-semibold tracking-tight c-primary">
+                <a
+                  href={getLocalizedPath(`/writing/${slug}/`, currentLang)}
+                  class="transition-colors duration-150 hover:c-primary"
+                >
+                  {post.data.title}
+                </a>
+              </h3>
+              {post.data.description && (
+                <p class="text-3.5 leading-1.6em c-secondary/85">
+                  {post.data.description}
+                </p>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+    </section>
+  )}
+
+  <!-- Latest Writing -->
+  {latestPosts.length > 0 && (
+    <section class="mb-12">
+      <div class="mb-5 flex items-baseline justify-between gap-4">
+        <h2 class="text-3.5 font-semibold tracking-tight c-primary">
+          Latest Writing
+        </h2>
+        <a
+          href={getLocalizedPath('/writing/', currentLang)}
+          class="text-3 c-secondary/70 transition-colors duration-150 hover:c-primary"
+        >
+          View all →
+        </a>
+      </div>
+      <div class="uno-decorative-line" />
+      <PostList posts={latestPosts} lang={currentLang} />
+    </section>
+  )}
+
+  <!-- Projects -->
+  <section class="mb-12">
+    <div class="mb-5 flex items-baseline justify-between gap-4">
+      <h2 class="text-3.5 font-semibold tracking-tight c-primary">
+        Projects
+      </h2>
+      <a
+        href={getLocalizedPath('/projects/', currentLang)}
+        class="text-3 c-secondary/70 transition-colors duration-150 hover:c-primary"
+      >
+        All projects →
+      </a>
+    </div>
+    <ul class="grid gap-3 sm:grid-cols-1">
+      {projects.map(project => (
+        <li class="uno-card p-4">
+          <div class="mb-1 flex items-center justify-between gap-3">
+            <h3 class="text-3.75 font-semibold tracking-tight c-primary">
+              {project.name}
+            </h3>
+            {project.status && (
+              <span class="text-2.75 c-secondary/55">
+                {getProjectStatusLabel(project.status)}
+              </span>
+            )}
+          </div>
+          <p class="text-3.4 leading-1.55em c-secondary/85">
+            {project.description}
+          </p>
+          {project.url && (
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-2.5 inline-flex items-center gap-1 text-3.1 font-medium c-primary transition-colors duration-150 hover:underline"
+            >
+              Visit project
+              <span aria-hidden="true">→</span>
+            </a>
+          )}
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- Notes -->
+  {notes.length > 0 && (
+    <section class="mb-12">
+      <div class="mb-5 flex items-baseline justify-between gap-4">
+        <h2 class="text-3.5 font-semibold tracking-tight c-primary">
+          Notes
+        </h2>
+        <a
+          href={getLocalizedPath('/notes/', currentLang)}
+          class="text-3 c-secondary/70 transition-colors duration-150 hover:c-primary"
+        >
+          All notes →
+        </a>
+      </div>
+      <ul class="flex flex-col gap-3">
+        {notes.map((note) => {
+          const slug = note.id
+          return (
+            <li>
+              <a
+                href={getNotePath(slug, currentLang)}
+                class="group block"
+              >
+                <h3 class="text-3.6 font-medium c-primary transition-colors duration-150 group-hover:c-primary">
+                  {note.data.title}
+                </h3>
+                {note.data.description && (
+                  <p class="mt-1 text-3.25 c-secondary/75">
+                    {note.data.description}
+                  </p>
+                )}
+              </a>
+            </li>
+          )
+        })}
+      </ul>
+    </section>
+  )}
+
+  <!-- About entry -->
+  <section class="mb-4">
+    <div class="uno-decorative-line" />
+    <p class="text-3.5 leading-1.65em c-secondary">
+      More about me on the
+      <a
+        href={getLocalizedPath('/about/', currentLang)}
+        class="font-medium c-primary transition-colors duration-150 hover:underline"
+      >
+        About
+      </a>
+      page.
+    </p>
+  </section>
+</Layout>

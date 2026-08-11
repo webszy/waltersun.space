@@ -1,0 +1,71 @@
+---
+import { themeConfig } from '@/config'
+import { getLangFromPath } from '@/i18n/lang'
+import { getLocalizedPath } from '@/i18n/path'
+
+const { author } = themeConfig.site
+const { links, startYear } = themeConfig.footer
+
+const currentYear = new Date().getFullYear()
+const year = Number(startYear) === currentYear
+  ? startYear
+  : `${startYear}-${currentYear}`
+
+const currentLang = getLangFromPath(Astro.url.pathname)
+const socialLinks = links.map(({ name, url }) => {
+  const isRSS = url === '/atom.xml' || url === '/rss.xml'
+  const isEmail = /^[\w.-]+@[\w.-]+\.[a-z]{2,}$/i.test(url)
+
+  if (isRSS) {
+    const localizedPath = getLocalizedPath(url, currentLang)
+    const href = import.meta.env.DEV
+      ? localizedPath
+      : localizedPath.slice(0, -1)
+
+    return {
+      name,
+      href,
+      target: '_blank',
+      rel: 'noopener noreferrer',
+    }
+  }
+
+  if (isEmail) {
+    const href = `mailto:${url}`
+    return {
+      name,
+      href,
+    }
+  }
+
+  return {
+    name,
+    'href': url,
+    'target': '_blank',
+    'rel': 'noopener noreferrer',
+  }
+})
+---
+
+<footer
+  class="text-3 leading-1.5em font-navbar tracking-normal c-secondary/70"
+  lg="uno-desktop-column bottom-20 text-3.25"
+>
+  <p class="flex flex-wrap gap-x-1">
+    {socialLinks.map((link, index) => (
+      <>
+        <a class="transition-colors duration-150 hover:c-primary" {...link}>{link.name}</a>
+        {index < socialLinks.length - 1 && <span class="c-secondary/30">·</span>}
+      </>
+    ))}
+  </p>
+
+  <p class="mt-2">
+    © {year} {author}
+  </p>
+
+  <p class="mt-1 text-2.75 c-secondary/50">
+    Built with <a class="transition-colors duration-150 hover:c-primary" href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro</a>
+    · <a class="transition-colors duration-150 hover:c-primary" href="https://github.com/radishzzz/astro-theme-retypeset" target="_blank" rel="noopener noreferrer">Retypeset</a>
+  </p>
+</footer>

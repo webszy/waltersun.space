@@ -1,0 +1,58 @@
+---
+import { ui } from '@/i18n/ui'
+import { getPageInfo } from '@/utils/page'
+
+const { currentLang, isWriting, isNotes, isProjects, isAbout, getLocalizedPath } = getPageInfo(Astro.url.pathname)
+const currentUI = ui[currentLang as keyof typeof ui] ?? {}
+
+function getNavItemClass(isActive: boolean) {
+  return isActive
+    ? 'c-primary font-semibold'
+    : 'c-secondary/80 transition-colors duration-150 hover:c-primary'
+}
+
+const navItems = [
+  {
+    href: '/writing/',
+    label: currentUI.writing ?? currentUI.posts,
+    className: getNavItemClass(isWriting),
+  },
+  {
+    href: '/notes/',
+    label: currentUI.notes ?? 'Notes',
+    className: getNavItemClass(isNotes),
+  },
+  {
+    href: '/projects/',
+    label: currentUI.projects ?? 'Projects',
+    className: getNavItemClass(isProjects),
+  },
+  {
+    href: '/about/',
+    label: currentUI.about,
+    className: getNavItemClass(isAbout),
+  },
+]
+---
+
+<nav
+  aria-label="Site Navigation"
+  class:list={[
+    'mb-10.5 text-3.5 font-medium leading-2.45em font-navbar tracking-normal',
+    'lg:(uno-desktop-column text-3.75 bottom-[min(9.04rem+3.85vw,12.5rem)])',
+    isWriting ? 'hidden lg:block' : '',
+  ]}
+>
+  <ul class="flex flex-wrap gap-x-5 gap-y-2 lg:flex-col lg:gap-0">
+    {navItems.map(item => (
+      <li>
+        <a
+          href={getLocalizedPath(item.href)}
+          class={item.className}
+        >
+          {item.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>

@@ -1,0 +1,178 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import type { Language } from '@/i18n/config'
+import { getCollection, render } from 'astro:content'
+import Comment from '@/components/Comment/Index.astro'
+import PostDate from '@/components/PostDate.astro'
+import TagList from '@/components/TagList.astro'
+import BackButton from '@/components/Widgets/BackButton.astro'
+import TOC from '@/components/Widgets/TOC.astro'
+import { allLocales } from '@/config'
+import { getLangFromLocale, getLangRouteParam } from '@/i18n/lang'
+import { getLocalizedPath, getPostPath } from '@/i18n/path'
+import Layout from '@/layouts/Layout.astro'
+import { checkPostSlugDuplication, getPosts } from '@/utils/content'
+import { getPostDescription } from '@/utils/description'
+
+export async function getStaticPaths() {
+  // Include drafts only in dev — production build excludes them from routes and slug checks
+  const posts: CollectionEntry<'posts'>[] = await getCollection(
+    'posts',
+    ({ data }) => import.meta.env.DEV || !data.draft,
+  )
+
+  const duplicates = await checkPostSlugDuplication(posts)
+  if (duplicates.length > 0) {
+    throw new Error(`Duplicate post slugs:\n${duplicates.join('\n')}`)
+  }
+
+  const slugToLangsMap = new Map<string, Set<Language>>()
+
+  for (const post of posts) {
+    const slug = post.data.abbrlink || post.id
+    const lang = post.data.lang
+
+    let langSet = slugToLangsMap.get(slug)
+    if (!langSet) {
+      langSet = new Set()
+      slugToLangsMap.set(slug, langSet)
+    }
+
+    if (lang) {
+      langSet.add(lang as Language)
+    }
+    else {
+      allLocales.forEach(locale => langSet.add(locale))
+    }
+  }
+
+  const slugToLangs: Record<string, Language[]> = {}
+  for (const [slug, langs] of slugToLangsMap) {
+    slugToLangs[slug] = [...langs].sort((a, b) => allLocales.indexOf(a) - allLocales.indexOf(b))
+  }
+
+  return allLocales.flatMap(lang => posts
+    .filter(post => import.meta.env.DEV || !post.data.draft)
+    .filter(post => post.data.lang === lang || post.data.lang === '')
+    .map((post) => {
+      const slug = post.data.abbrlink || post.id
+      return {
+        params: { lang: getLangRouteParam(lang), slug },
+        props: { post, supportedLangs: slugToLangs[slug] },
+      }
+    }),
+  )
+}
+
+interface Props {
+  post: CollectionEntry<'posts'>
+  supportedLangs: Language[]
+}
+
+const { post, supportedLangs } = Astro.props
+const currentLang = getLangFromLocale(Astro.currentLocale)
+const slug = post.data.abbrlink || post.id
+const description = getPostDescription(post, 'meta')
+const { Content, headings, remarkPluginFrontmatter } = await render(post)
+
+// Prev / Next among all writing sorted by date (newest first)
+const allPosts = await getPosts(currentLang)
+const currentIndex = allPosts.findIndex(p => p.id === post.id)
+const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null
+const prevPost = currentIndex >= 0 && currentIndex < allPosts.length - 1
+  ? allPosts[currentIndex + 1]
+  : null
+---
+
+<Layout
+  postTitle={post.data.title}
+  postDescription={description}
+  postSlug={post.id}
+  supportedLangs={supportedLangs}
+>
+  <article class="heti">
+    <div class="relative">
+      <BackButton />
+      <h1 class="post-title">
+        <span
+          transition:name={`post-${slug}${currentLang ? `-${currentLang}` : ''}`}
+          data-disable-theme-toggle-transition
+        >
+          {post.data.title}
+        </span>
+      </h1>
+    </div>
+
+    {post.data.description && (
+      <p class="mb-4 mt--1 text-3.75 leading-1.65em c-secondary/85">
+        {post.data.description}
+      </p>
+    )}
+
+    <div
+      id="post-date"
+      class="mb-10 block text-3.4 c-secondary/80 font-time tracking-normal"
+      transition:name={`time-${slug}${currentLang ? `-${currentLang}` : ''}`}
+      data-disable-theme-toggle-transition
+    >
+      <PostDate
+        date={post.data.published}
+        updatedDate={post.data.updated}
+        minutes={remarkPluginFrontmatter.minutes}
+      />
+    </div>
+
+    {post.data.tags?.length > 0 && (
+      <div class="mb-8">
+        <TagList tags={post.data.tags} lang={currentLang} />
+      </div>
+    )}
+
+    {post.data.toc && <TOC headings={headings} />}
+
+    <div id="post-content">
+      <Content />
+      <div id="post-copyright" />
+    </div>
+
+    <!-- Prev / Next -->
+    {(prevPost || nextPost) && (
+      <nav
+        aria-label="Adjacent articles"
+        class="mt-14 grid gap-4 border-t border-secondary/10 pt-8 sm:grid-cols-2"
+      >
+        {prevPost
+          ? (
+              <a
+                href={getPostPath(prevPost.data.abbrlink || prevPost.id, currentLang)}
+                class="uno-card block p-4 transition-colors duration-150"
+              >
+                <span class="mb-1 block text-2.75 c-secondary/55">Previous</span>
+                <span class="text-3.5 font-medium c-primary">{prevPost.data.title}</span>
+              </a>
+            )
+          : <div />}
+        {nextPost && (
+          <a
+            href={getPostPath(nextPost.data.abbrlink || nextPost.id, currentLang)}
+            class="uno-card block p-4 text-right transition-colors duration-150 sm:col-start-2"
+          >
+            <span class="mb-1 block text-2.75 c-secondary/55">Next</span>
+            <span class="text-3.5 font-medium c-primary">{nextPost.data.title}</span>
+          </a>
+        )}
+      </nav>
+    )}
+
+    <p class="mt-8">
+      <a
+        href={getLocalizedPath('/writing/', currentLang)}
+        class="text-3.5 font-medium c-secondary/80 transition-colors duration-150 hover:c-primary"
+      >
+        ← Back to Writing
+      </a>
+    </p>
+
+    <Comment />
+  </article>
+</Layout>

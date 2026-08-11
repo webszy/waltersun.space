@@ -1,0 +1,66 @@
+---
+import { allLocales } from '@/config'
+import { getLangFromLocale, getLangRouteParam } from '@/i18n/lang'
+import { getNotePath } from '@/i18n/path'
+import Layout from '@/layouts/Layout.astro'
+import { getNotes } from '@/utils/content'
+
+export async function getStaticPaths() {
+  return allLocales.map(lang => ({
+    params: { lang: getLangRouteParam(lang) },
+  }))
+}
+
+const currentLang = getLangFromLocale(Astro.currentLocale)
+const notes = await getNotes(currentLang)
+---
+
+<Layout>
+  <div class="mb-8">
+    <h1 class="mb-2 text-7 font-semibold tracking-tight c-primary lg:text-8">
+      Notes
+    </h1>
+    <p class="text-3.5 c-secondary/80 leading-1.6em">
+      Short observations, experiment logs, and technical asides — lighter than full essays.
+    </p>
+  </div>
+
+  {notes.length === 0
+    ? (
+        <p class="c-secondary/70">No notes yet.</p>
+      )
+    : (
+        <ul class="flex flex-col gap-5">
+          {notes.map((note) => {
+            const slug = note.id
+            return (
+              <li class="border-b border-secondary/8 pb-5">
+                <h2 class="mb-1.5 text-4 font-semibold tracking-tight c-primary">
+                  <a
+                    href={getNotePath(slug, currentLang)}
+                    class="transition-colors duration-150 hover:c-primary"
+                  >
+                    {note.data.title}
+                  </a>
+                </h2>
+                {note.data.description && (
+                  <p class="mb-2 text-3.4 leading-1.55em c-secondary/80">
+                    {note.data.description}
+                  </p>
+                )}
+                <time
+                  datetime={note.data.published.toISOString()}
+                  class="text-3 c-secondary/55"
+                >
+                  {note.data.published.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </time>
+              </li>
+            )
+          })}
+        </ul>
+      )}
+</Layout>

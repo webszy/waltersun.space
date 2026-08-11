@@ -1,0 +1,68 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { getCollection, render } from 'astro:content'
+import { allLocales } from '@/config'
+import { getLangFromLocale, getLangRouteParam } from '@/i18n/lang'
+import { getLocalizedPath } from '@/i18n/path'
+import Layout from '@/layouts/Layout.astro'
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes')
+
+  return allLocales.flatMap(lang => notes
+    .filter(note => import.meta.env.DEV || !note.data.draft)
+    .filter(note => note.data.lang === lang || note.data.lang === '')
+    .map(note => ({
+      params: { lang: getLangRouteParam(lang), slug: note.id },
+      props: { note },
+    })),
+  )
+}
+
+interface Props {
+  note: CollectionEntry<'notes'>
+}
+
+const { note } = Astro.props
+const currentLang = getLangFromLocale(Astro.currentLocale)
+const { Content } = await render(note)
+const description = note.data.description || note.data.title
+---
+
+<Layout postTitle={note.data.title} postDescription={description}>
+  <article class="heti">
+    <h1 class="post-title">
+      {note.data.title}
+    </h1>
+
+    {note.data.description && (
+      <p class="mb-4 mt--1 text-3.75 leading-1.65em c-secondary/85">
+        {note.data.description}
+      </p>
+    )}
+
+    <time
+      datetime={note.data.published.toISOString()}
+      class="mb-10 block text-3.4 c-secondary/80"
+    >
+      {note.data.published.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })}
+    </time>
+
+    <div id="post-content">
+      <Content />
+    </div>
+
+    <p class="mt-10">
+      <a
+        href={getLocalizedPath('/notes/', currentLang)}
+        class="text-3.5 font-medium c-secondary/80 transition-colors duration-150 hover:c-primary"
+      >
+        ← Back to Notes
+      </a>
+    </p>
+  </article>
+</Layout>
