@@ -1,9 +1,9 @@
-export type ProjectStatus =
-  | 'active'
-  | 'in-development'
-  | 'paused'
-  | 'archived'
-  | 'concept'
+export type ProjectStatus
+  = | 'active'
+    | 'in-development'
+    | 'paused'
+    | 'archived'
+    | 'concept'
 
 export interface Project {
   name: string
@@ -53,8 +53,8 @@ export const projects: Project[] = [
   {
     name: 'DeepCheck',
     description: 'A web-based public information analysis tool.',
-    // url: 'https://parseany.link',
-    status: 'in-development',
+    url: 'https://deepcheck.dev',
+    status: 'active',
     order: 3,
     tags: ['Web', 'Product'],
   },
