@@ -43,12 +43,12 @@ export const projects: Project[] = [
     tags: ['Mobile', 'Analytics', 'Monetization'],
   },
   {
-    name: 'ParseAny.link',
-    description: 'A web-based public information analysis tool.',
-    url: 'https://parseany.link',
+    name: 'Codetoken.Cloud',
+    description: 'An OpenAI-compatible AI API gateway for Codex, Claude, and multi-model workflows.',
+    url: 'https://codetoken.cloud',
     status: 'active',
     order: 2,
-    tags: ['Web', 'Product'],
+    tags: ['AI', 'API Gateway', 'Developer Tools'],
   },
   {
     name: 'DeepCheck',
@@ -56,6 +56,14 @@ export const projects: Project[] = [
     url: 'https://deepcheck.dev',
     status: 'active',
     order: 3,
+    tags: ['Web', 'Product'],
+  },
+  {
+    name: 'ParseAny.link',
+    description: 'A web-based public information analysis tool.',
+    url: 'https://parseany.link',
+    status: 'active',
+    order: 4,
     tags: ['Web', 'Product'],
   },
 ]
