@@ -153,6 +153,10 @@ export const themeConfig: ThemeConfig = {
         url: 'https://github.com/webszy',
       },
       {
+        name: 'CodeToken.cloud',
+        url: 'https://CodeToken.cloud',
+      },
+      {
         name: 'RSS',
         url: '/atom.xml',
       },
