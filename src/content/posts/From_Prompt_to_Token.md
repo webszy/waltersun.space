@@ -1,5 +1,5 @@
 ---
-title: new-post
+title: From Prompt to Token, and Finally to Yourself
 published: 2026-08-28T12:01:23.164Z
 description: 'From prompts to tokens, AI is changing how we work, think, and create. But as AI becomes more capable, the most important question remains: what is still uniquely yours?'
 updated: ''
