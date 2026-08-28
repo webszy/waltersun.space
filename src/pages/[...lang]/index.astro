@@ -1,7 +1,7 @@
 ---
 import PostList from '@/components/PostList.astro'
 import { allLocales, themeConfig } from '@/config'
-import { getProjectStatusLabel, getProjects } from '@/data/projects'
+import { getProjects, getProjectStatusLabel } from '@/data/projects'
 import { getLangFromLocale, getLangRouteParam } from '@/i18n/lang'
 import { getLocalizedPath, getNotePath } from '@/i18n/path'
 import Layout from '@/layouts/Layout.astro'
@@ -24,7 +24,7 @@ const projects = getProjects()
 
 const socials = [
   { name: 'X', href: 'https://x.com/WalterAIBuilder' },
-  { name: 'GitHub', href: 'https://github.com/WalterAIBuilder' },
+  { name: 'GitHub', href: 'https://github.com/webszy' },
   { name: 'RSS', href: getLocalizedPath('/atom.xml', currentLang).replace(/\/$/, '') },
 ]
 ---
@@ -32,22 +32,22 @@ const socials = [
 <Layout>
   <!-- Hero: personal brand first -->
   <section class="mb-14 lg:mb-16">
-    <h1 class="mb-4 text-8 font-semibold tracking-tight c-primary lg:text-10">
+    <h1 class="mb-4 text-8 c-primary font-semibold tracking-tight lg:text-10">
       Walter Sun
     </h1>
-    <p class="mb-1 text-4.5 leading-1.5em c-primary/90 font-medium lg:text-5">
+    <p class="mb-1 text-4.5 c-primary/90 font-medium leading-1.5em lg:text-5">
       Building apps.
     </p>
-    <p class="mb-1 text-4.5 leading-1.5em c-primary/90 font-medium lg:text-5">
+    <p class="mb-1 text-4.5 c-primary/90 font-medium leading-1.5em lg:text-5">
       Analyzing systems.
     </p>
-    <p class="mb-5 text-4.5 leading-1.5em c-primary/90 font-medium lg:text-5">
+    <p class="mb-5 text-4.5 c-primary/90 font-medium leading-1.5em lg:text-5">
       Sharing experiments.
     </p>
     <p class="mb-5 text-3.5 c-secondary/80 tracking-normal">
       Growth Engineer · AI Builder · Indie Hacker
     </p>
-    <p class="mb-6 max-w-prose text-3.75 leading-1.7em c-secondary">
+    <p class="mb-6 max-w-prose text-3.75 c-secondary leading-1.7em">
       I build apps, study growth systems, and write about what I learn from real-world experiments in AI, mobile ads, products, and engineering.
     </p>
     <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-3.5">
@@ -65,7 +65,7 @@ const socials = [
         </>
       ))}
       <span class="c-secondary/25">·</span>
-      <span class="c-secondary/50 text-3.25">{themeConfig.site.url.replace('https://', '')}</span>
+      <span class="text-3.25 c-secondary/50">{themeConfig.site.url.replace('https://', '')}</span>
     </div>
   </section>
 
@@ -73,7 +73,7 @@ const socials = [
   {featuredPosts.length > 0 && (
     <section class="mb-12">
       <div class="mb-5 flex items-baseline justify-between gap-4">
-        <h2 class="text-3.5 font-semibold tracking-tight c-primary">
+        <h2 class="text-3.5 c-primary font-semibold tracking-tight">
           Featured Writing
         </h2>
         <a
@@ -88,7 +88,7 @@ const socials = [
           const slug = post.data.abbrlink || post.id
           return (
             <li class="uno-card p-4 lg:p-5">
-              <h3 class="mb-1.5 text-4 font-semibold tracking-tight c-primary">
+              <h3 class="mb-1.5 text-4 c-primary font-semibold tracking-tight">
                 <a
                   href={getLocalizedPath(`/writing/${slug}/`, currentLang)}
                   class="transition-colors duration-150 hover:c-primary"
@@ -97,7 +97,7 @@ const socials = [
                 </a>
               </h3>
               {post.data.description && (
-                <p class="text-3.5 leading-1.6em c-secondary/85">
+                <p class="text-3.5 c-secondary/85 leading-1.6em">
                   {post.data.description}
                 </p>
               )}
@@ -112,7 +112,7 @@ const socials = [
   {latestPosts.length > 0 && (
     <section class="mb-12">
       <div class="mb-5 flex items-baseline justify-between gap-4">
-        <h2 class="text-3.5 font-semibold tracking-tight c-primary">
+        <h2 class="text-3.5 c-primary font-semibold tracking-tight">
           Latest Writing
         </h2>
         <a
@@ -130,7 +130,7 @@ const socials = [
   <!-- Projects -->
   <section class="mb-12">
     <div class="mb-5 flex items-baseline justify-between gap-4">
-      <h2 class="text-3.5 font-semibold tracking-tight c-primary">
+      <h2 class="text-3.5 c-primary font-semibold tracking-tight">
         Projects
       </h2>
       <a
@@ -144,7 +144,7 @@ const socials = [
       {projects.map(project => (
         <li class="uno-card p-4">
           <div class="mb-1 flex items-center justify-between gap-3">
-            <h3 class="text-3.75 font-semibold tracking-tight c-primary">
+            <h3 class="text-3.75 c-primary font-semibold tracking-tight">
               {project.name}
             </h3>
             {project.status && (
@@ -153,7 +153,7 @@ const socials = [
               </span>
             )}
           </div>
-          <p class="text-3.4 leading-1.55em c-secondary/85">
+          <p class="text-3.4 c-secondary/85 leading-1.55em">
             {project.description}
           </p>
           {project.url && (
@@ -161,7 +161,7 @@ const socials = [
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
-              class="mt-2.5 inline-flex items-center gap-1 text-3.1 font-medium c-primary transition-colors duration-150 hover:underline"
+              class="mt-2.5 inline-flex items-center gap-1 text-3.1 c-primary font-medium transition-colors duration-150 hover:underline"
             >
               Visit project
               <span aria-hidden="true">→</span>
@@ -176,7 +176,7 @@ const socials = [
   {notes.length > 0 && (
     <section class="mb-12">
       <div class="mb-5 flex items-baseline justify-between gap-4">
-        <h2 class="text-3.5 font-semibold tracking-tight c-primary">
+        <h2 class="text-3.5 c-primary font-semibold tracking-tight">
           Notes
         </h2>
         <a
@@ -195,7 +195,7 @@ const socials = [
                 href={getNotePath(slug, currentLang)}
                 class="group block"
               >
-                <h3 class="text-3.6 font-medium c-primary transition-colors duration-150 group-hover:c-primary">
+                <h3 class="text-3.6 c-primary font-medium transition-colors duration-150 group-hover:c-primary">
                   {note.data.title}
                 </h3>
                 {note.data.description && (
@@ -214,11 +214,11 @@ const socials = [
   <!-- About entry -->
   <section class="mb-4">
     <div class="uno-decorative-line" />
-    <p class="text-3.5 leading-1.65em c-secondary">
+    <p class="text-3.5 c-secondary leading-1.65em">
       More about me on the
       <a
         href={getLocalizedPath('/about/', currentLang)}
-        class="font-medium c-primary transition-colors duration-150 hover:underline"
+        class="c-primary font-medium transition-colors duration-150 hover:underline"
       >
         About
       </a>
