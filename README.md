@@ -1,8 +1,8 @@
-# waltersun.space
+# webopc.space
 
 Personal technical blog and brand site for **Walter Sun**.
 
-- Site: [https://waltersun.space](https://waltersun.space)
+- Site: [https://webopc.space](https://webopc.space)
 - X: [@WalterAIBuilder](https://x.com/WalterAIBuilder)
 
 Built on the [Retypeset](https://github.com/radishzzz/astro-theme-retypeset) Astro theme, restyled for a modern, restrained developer brand (Geist + Geist Mono).
@@ -90,7 +90,7 @@ Fonts: `public/fonts/geist/` + `src/styles/font.css`.
 4. Node version: **20** or **22** (set in Pages environment if needed)
 5. Environment: no secrets required for a pure static deploy.
 
-Optional: set custom domain `waltersun.space` in Cloudflare DNS + Pages custom domains.
+Optional: set custom domain `webopc.space` in Cloudflare DNS + Pages custom domains.
 
 ## Theme heritage
 

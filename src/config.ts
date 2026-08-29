@@ -4,7 +4,7 @@ export const themeConfig: ThemeConfig = {
   // SITE INFORMATION >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> START
   site: {
     // site title
-    title: 'WalterAIBuilder In X',
+    title: 'Find WalterAIBuilder In X',
     // site subtitle
     subtitle: 'Growth Engineer · AI Builder · Indie Hacker',
     // site description
@@ -14,7 +14,7 @@ export const themeConfig: ThemeConfig = {
     // author name
     author: 'Walter Sun',
     // site url
-    url: 'https://waltersun.space',
+    url: 'https://webopc.space',
     // base path
     // root directory for all pages and assets
     base: '/', // e.g., '/blog', '/docs'

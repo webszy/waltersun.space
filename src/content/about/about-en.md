@@ -14,4 +14,4 @@ I work at the intersection of:
 
 This site is where I write long-form essays under **Writing**, short technical observations under **Notes**, and keep a living list of **Projects**.
 
-Find me on [X](https://x.com/WalterAIBuilder). Website: [waltersun.space](https://waltersun.space).
+Find me on [X](https://x.com/WalterAIBuilder). Website: [webopc.space](https://webopc.space).
