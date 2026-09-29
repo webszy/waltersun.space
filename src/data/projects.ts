@@ -51,7 +51,7 @@ export const projects: Project[] = [
     tags: ['AI', 'API Gateway', 'Developer Tools'],
   },
   {
-    name: 'DeepUsername',
+    name: 'DeepUsername.ai',
     description: 'A web-based public information analysis tool.',
     url: 'https://DeepUsername.ai',
     status: 'active',
