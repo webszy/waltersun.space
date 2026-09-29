@@ -24,7 +24,7 @@ abbrlink: ''
 # AI Bubble or Expectation Decay?
 Subtitle: As intelligence becomes cheaper, delivery becomes more expensive
 
->>> This article continues the discussion from the [previous one](./tokens_are_cheap_now_what_comes_next): the last piece looked at intelligence becoming a cheap raw material; this one asks what happens when the raw material keeps getting cheaper, while our ability to turn it into reliable outcomes fails to keep pace.
+> This article continues the discussion from the [previous one](../tokens_are_cheap_now_what_comes_next/): the last piece looked at intelligence becoming a cheap raw material; this one asks what happens when the raw material keeps getting cheaper, while our ability to turn it into reliable outcomes fails to keep pace.
 
 A few days ago, I passed by a subway station and remembered something small.
 

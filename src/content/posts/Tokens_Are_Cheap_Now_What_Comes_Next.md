@@ -401,5 +401,5 @@ How much work did those calls ultimately complete that actually passed acceptanc
 
 Getting from the former to the latter is what I mean by the token-processing industry.
 
-In the [next article](./AI_Bubble_or_Expectation_Decay), we will talk about AI's "expectation decay."
+In the [next article](../AI_Bubble_or_Expectation_Decay/), we will talk about AI's "expectation decay."
 
