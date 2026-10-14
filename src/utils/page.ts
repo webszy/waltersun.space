@@ -1,4 +1,5 @@
 import { base, moreLocales } from '@/config'
+import { pageLocales } from '@/i18n/config'
 import { getLangFromPath } from '@/i18n/lang'
 import { getLocalizedPath } from '@/i18n/path'
 
@@ -23,7 +24,8 @@ function matchPageType(path: string, prefix: string = '') {
 
   // Match both default language paths and localized paths
   return startsWithSegment(normalizedPath, prefix)
-    || moreLocales.some(lang => startsWithSegment(normalizedPath, `${lang}/${prefix}`))
+    || (pageLocales[prefix as keyof typeof pageLocales] ?? moreLocales)
+      .some(lang => startsWithSegment(normalizedPath, `${lang}/${prefix}`))
 }
 
 export function isHomePage(path: string) {
@@ -55,6 +57,10 @@ export function isAboutPage(path: string) {
   return matchPageType(path, 'about')
 }
 
+export function isStackPage(path: string) {
+  return matchPageType(path, 'stack')
+}
+
 // Returns page context with language, page types and localization helper
 export function getPageInfo(path: string) {
   const currentLang = getLangFromPath(path)
@@ -65,6 +71,7 @@ export function getPageInfo(path: string) {
   const isProjects = isProjectsPage(path)
   const isTag = isTagPage(path)
   const isAbout = isAboutPage(path)
+  const isStack = isStackPage(path)
 
   return {
     currentLang,
@@ -75,6 +82,7 @@ export function getPageInfo(path: string) {
     isProjects,
     isTag,
     isAbout,
+    isStack,
     getLocalizedPath: (targetPath: string) =>
       getLocalizedPath(targetPath, currentLang),
   }

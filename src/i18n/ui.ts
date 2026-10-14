@@ -8,6 +8,7 @@ interface Translation {
   writing: string
   notes: string
   projects: string
+  stack?: string
   tags: string
   about: string
   toc: string
@@ -34,6 +35,7 @@ export const ui: Record<Language, Translation> = {
     writing: 'Writing',
     notes: 'Notes',
     projects: 'Projects',
+    stack: 'Stack',
     tags: 'Tags',
     about: 'About',
     toc: 'Table of Contents',
@@ -130,6 +132,7 @@ export const ui: Record<Language, Translation> = {
     writing: 'Writing',
     notes: 'Notes',
     projects: 'Projects',
+    stack: '工具栈',
     tags: '标签',
     about: '关于',
     toc: '目录',

@@ -16,6 +16,11 @@ export const langMap = {
 // Supported Languages
 export type Language = keyof typeof langMap
 
+// Languages enabled for individual pages without changing the site-wide locales
+export const pageLocales = {
+  stack: ['en', 'zh'],
+} satisfies Record<string, Language[]>
+
 // Giscus Language Map
 // https://giscus.app/
 export const giscusLocaleMap: Record<Language, string> = {
