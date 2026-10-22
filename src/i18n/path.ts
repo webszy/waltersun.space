@@ -1,5 +1,6 @@
 import type { Language } from '@/i18n/config'
 import { allLocales, base, defaultLocale } from '@/config'
+import { pageLocales } from '@/i18n/config'
 import { getLangFromPath, getNextGlobalLang } from '@/i18n/lang'
 
 /**
@@ -52,7 +53,10 @@ export function getNotePath(slug: string, lang: Language): string {
  */
 export function getLocalizedPath(path: string, currentLang?: Language) {
   const normalizedPath = path.replace(/^\/|\/$/g, '')
-  const lang = currentLang ?? getLangFromPath(path)
+  const [page] = normalizedPath.split('/')
+  const supportedLocales: readonly Language[] = pageLocales[page as keyof typeof pageLocales] ?? allLocales
+  const requestedLang = currentLang ?? getLangFromPath(path)
+  const lang = supportedLocales.includes(requestedLang) ? requestedLang : defaultLocale
 
   const langPrefix = lang === defaultLocale ? '' : `/${lang}`
   const localizedPath = normalizedPath === ''

@@ -2,6 +2,7 @@ import { glob } from 'astro/loaders'
 import { z } from 'astro/zod'
 import { defineCollection } from 'astro:content'
 import { allLocales, themeConfig } from '@/config'
+import { pageLocales } from '@/i18n/config'
 
 const posts = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/posts' }),
@@ -52,4 +53,11 @@ const about = defineCollection({
   }),
 })
 
-export const collections = { posts, notes, about }
+const stack = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/stack' }),
+  schema: z.object({
+    lang: z.enum(['', ...pageLocales.stack]).optional().default(''),
+  }),
+})
+
+export const collections = { posts, notes, about, stack }

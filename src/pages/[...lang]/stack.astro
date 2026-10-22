@@ -1,0 +1,31 @@
+---
+import { getCollection, render } from 'astro:content'
+import { pageLocales } from '@/i18n/config'
+import { getLangFromLocale, getLangRouteParam } from '@/i18n/lang'
+import { ui } from '@/i18n/ui'
+import Layout from '@/layouts/Layout.astro'
+
+export async function getStaticPaths() {
+  return pageLocales.stack.map(lang => ({
+    params: { lang: getLangRouteParam(lang) },
+  }))
+}
+
+const currentLang = getLangFromLocale(Astro.currentLocale)
+const allStackEntries = await getCollection('stack')
+const stackEntry = allStackEntries.find(entry => entry.data.lang === currentLang)
+  ?? allStackEntries.find(entry => entry.data.lang === '')
+const { Content } = stackEntry ? await render(stackEntry) : { Content: null }
+const pageTitle = ui[currentLang].stack ?? 'Stack'
+---
+
+<Layout supportedLangs={pageLocales.stack}>
+  <div class="mb-8">
+    <h1 class="mb-2 text-7 c-primary font-semibold tracking-tight lg:text-8">
+      {pageTitle}
+    </h1>
+  </div>
+  <div class="heti">
+    {Content && <Content />}
+  </div>
+</Layout>

@@ -2,7 +2,7 @@
 import { ui } from '@/i18n/ui'
 import { getPageInfo } from '@/utils/page'
 
-const { currentLang, isWriting, isNotes, isProjects, isAbout, getLocalizedPath } = getPageInfo(Astro.url.pathname)
+const { currentLang, isWriting, isNotes, isProjects, isAbout, isStack, getLocalizedPath } = getPageInfo(Astro.url.pathname)
 const currentUI = ui[currentLang as keyof typeof ui] ?? {}
 
 function getNavItemClass(isActive: boolean) {
@@ -26,6 +26,11 @@ const navItems = [
     href: '/projects/',
     label: currentUI.projects ?? 'Projects',
     className: getNavItemClass(isProjects),
+  },
+  {
+    href: '/stack/',
+    label: currentUI.stack ?? 'Stack',
+    className: getNavItemClass(isStack),
   },
   {
     href: '/about/',

@@ -1,6 +1,6 @@
 import type { Language } from '@/i18n/config'
 import { allLocales, base, defaultLocale, moreLocales } from '@/config'
-import { langMap } from '@/i18n/config'
+import { langMap, pageLocales } from '@/i18n/config'
 
 /**
  * Get the short language code for the `[...lang]` route parameter
@@ -39,6 +39,12 @@ export function getLangFromPath(path: string): Language {
   const pathWithoutBase = base && path.startsWith(base)
     ? path.slice(base.length)
     : path
+
+  const [lang, page] = pathWithoutBase.replace(/^\/|\/$/g, '').split('/')
+  const supportedLocales: readonly Language[] = pageLocales[page as keyof typeof pageLocales] ?? []
+  if (supportedLocales.includes(lang as Language)) {
+    return lang as Language
+  }
 
   return moreLocales.find(lang => pathWithoutBase.startsWith(`/${lang}/`)) ?? defaultLocale
 }
