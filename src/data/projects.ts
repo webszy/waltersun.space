@@ -35,12 +35,12 @@ export const projectStatusLabel: Record<ProjectStatus, string> = {
  */
 export const projects: Project[] = [
   {
-    name: 'iapStats',
-    description: 'Mobile monetization and acquisition analytics.',
-    // url: 'https://example.com',
-    status: 'in-development',
+    name: 'Webify',
+    description: 'All Tools,Locally processing,Just in Webify',
+    url: 'https://webify.tools',
+    status: 'active',
     order: 1,
-    tags: ['Mobile', 'Analytics', 'Monetization'],
+    tags: ['tools', 'web', 'Locally'],
   },
   {
     name: 'Codetoken.Cloud',
