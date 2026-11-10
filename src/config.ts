@@ -127,7 +127,7 @@ export const themeConfig: ThemeConfig = {
       baidu: '',
     },
     // google analytics
-    googleAnalyticsID: 'G-QPZD5C9FB0',
+    googleAnalyticsID: 'G-KLYGQ2YS2L',
     // umami analytics
     umamiAnalyticsID: '',
     // folo verification
